@@ -33,9 +33,7 @@ read:
     xor   ecx,ecx                   ; counter
 
 procbuff:
-    mov   edx,ecx
-    shl   edx,1
-    add   edx,ecx                   ; now,edx = ecx * 3
+    lea   edx,[ecx*2+ecx]
 
     mov   eax,0
     mov   al,byte [esi+ecx]         ; retrive one byte
@@ -51,7 +49,7 @@ procbuff:
 
     inc   ecx
     cmp   ecx,ebp
-    jl    procbuff                 ; loop process
+    jl    procbuff                  ; loop process
 
     mov   byte [edi+edx+2],0x0a
     mov   eax,4
