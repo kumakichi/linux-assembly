@@ -89,7 +89,7 @@ CopyToBuffer:
     pop   eax
     ret
 
-WrtHB:
+WriteSpecialChar:
     push  eax
     push  ebx
     push  ecx
@@ -139,32 +139,33 @@ _start:
     call  Ruler
 
     mov   esi,CharNums
-    mov   ebx,1
-    mov   ebp,0
+    mov   ebx,1                     ; x position
+    mov   ebp,0                     ; CharNums index
 
-.blast:
+WriteLines:
     mov   eax,ebp
     add   eax,StartRow
     mov   cl,byte [esi+ebp]
-    cmp   ecx,0
-    je    .rule2
-    call  WrtHB
-    inc   ebp
-    jmp   .blast
+    cmp   ecx,0                     ; the last element of CharNums(0)
+    je    BottomRuler
 
-.rule2:
+    call  WriteSpecialChar
+    inc   ebp                       ; index increase
+    jmp   WriteLines
+
+BottomRuler:
     mov   eax,ebp
-    add   eax,StartRow
-    mov   ebx,1
+    add   eax,StartRow              ; y
+    mov   ebx,1                     ; x
     mov   ecx,COLS-1
     call  Ruler
 
     mov   esi,Message
     mov   ecx,MSGLEN
     mov   ebx,COLS
-    sub   ebx,ecx
-    shr   ebx,1
-    mov   eax,24
+    sub   ebx,ecx                   ; the number of blank chars
+    shr   ebx,1                     ; now, x position (ebx) is centra
+    mov   eax,25                    ; y position
     call  CopyToBuffer
     call  ShowBuffer
 
