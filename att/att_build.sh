@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ $# -ne 1 ]
+if [ $# -lt 1 ]
 then
-    echo "Usage: $0 asm_source_file"
+    echo "Usage: $0 asm_source_file [lc]"
     exit
 fi
 
@@ -20,7 +20,13 @@ OBJFILE=${OUTFILE}".o"
 TMPFILE=${ASM_FILE}"~"
 
 as -o $OBJFILE $ASM_FILE
-ld -o $OUTFILE $OBJFILE
+if [[ $# -gt 1 && "$2" = "lc" ]]
+then
+    ld -o $OUTFILE $OBJFILE --dynamic-linker=/lib/ld-linux.so.2 -lc
+else
+    ld -o $OUTFILE $OBJFILE
+fi
+
 rm $OBJFILE
 if [ -f $TMPFILE ]
 then

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ $# -ne 1 ]
+if [ $# -lt 1 ]
 then
-    echo "Usage: $0 asm_source_file"
+    echo "Usage: $0 asm_source_file [lc]"
     exit
 fi
 
@@ -18,10 +18,17 @@ fi
 OUTFILE=${ASM_FILE%.${SUFFIX}}
 OBJFILE=${OUTFILE}".o"
 TMPFILE=${ASM_FILE}"~"
-FORMAT="elf32"
+FORMAT="elf"
 
 nasm -f $FORMAT $ASM_FILE -o $OBJFILE
-ld -o $OUTFILE -m elf_i386 $OBJFILE
+
+if [[ $# -gt 1 && "$2" = "lc" ]]
+then
+    ld -o $OUTFILE $OBJFILE --dynamic-linker=/lib/ld-linux.so.2 -lc
+else
+    ld -o $OUTFILE $OBJFILE
+fi
+
 rm $OBJFILE
 if [ -f $TMPFILE ]
 then
