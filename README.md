@@ -1,7 +1,7 @@
 About
 =========
 
-This is a repository for linux assembly language code snippet.
+This is a repository for linux assembly language code snippets.
 
 Files with a suffix 's'(lower case) are written in Intel Style; suffix with 'S'(upper case) means AT&T Style.
 
